@@ -5,14 +5,15 @@ const AdminBro = require("admin-bro");
 const AdminBroExpressjs = require("@admin-bro/express");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User.model");
-const Mother = require("./models/Mother.model");
-const Immediate_family = require("./models/Immediate_family.model");
-const Spouse = require("./models/Spouse.model");
-const Membership_Id = require("./models/Membership_Id.model");
 
-const Land = require("./models/Land.model");
+const Claim = require("./models/Claim.model");
+const Payment = require("./models/Payment.model");
+const Claimant = require("./models/Claimant.model");
+const Deceased = require("./models/Deceased.model");
 
-const Child = require("./models/Child.model");
+const DeathCause = require("./models/Cause_of_death.model");
+
+const Branch = require("./models/Branch.model");
 
 require("dotenv").config();
 
@@ -38,15 +39,18 @@ const canEditRecords = ({ currentAdmin, record }) => {
     (currentAdmin.role === "admin" ||
       currentAdmin._id === record.param("ownerId"))
   );
+
 };
+
 const canModifyUsers = ({ currentAdmin }) =>
   currentAdmin && currentAdmin.role === "admin";
+
 
 // Pass all configuration settings to AdminBro
 const adminBro = new AdminBro({
   branding: {
-    companyName: "Napitalais",
-    logo: "",
+    companyName: "PNGBSP Claims",
+    logo: "https://www.bsp.com.pg/content/images/bsp-logo.jpg",
   },
   theme: {
     color: {
@@ -56,7 +60,7 @@ const adminBro = new AdminBro({
   },
   resources: [
     {
-      resource: Immediate_family,
+      resource: Claim,
       options: {
         navigation: restrictedNavigation,
         properties: {
@@ -66,7 +70,7 @@ const adminBro = new AdminBro({
           createdAt: {
             isVisible: { edit: false, show: false, list: false, filter: true },
           },
-          description: { type: "richtext" },
+          comments: { type: "richtext" },
 
           createdAt: {
             isVisible: { edit: false, show: false, list: false, filter: true },
@@ -90,10 +94,30 @@ const adminBro = new AdminBro({
         },
       },
     },
-    //category
+    //branch
     {
-      resource: Land,
+      resource: Branch,
 
+      options: {
+        navigation: adminNavigation,
+        properties: {
+          ownerId: {
+            isVisible: { edit: false, show: true, list: true, filter: true },
+          },
+        },
+
+        actions: {  systemId: { type: String, required: true, unique: false },
+
+          edit: { isAccessible: canModifyUsers },
+          delete: { isAccessible: canModifyUsers },
+          new: { isAccessible: canModifyUsers },
+          bulkDelete: { isAccessible: canModifyUsers },
+        },
+      },
+    },
+    //payment
+    {
+      resource: Payment,
       options: {
         navigation: adminNavigation,
         properties: {
@@ -110,49 +134,31 @@ const adminBro = new AdminBro({
         },
       },
     },
-    //Spouse
-    {
-      resource: Spouse,
-      options: {
-        navigation: adminNavigation,
-        properties: {
-          ownerId: {
-            isVisible: { edit: false, show: true, list: true, filter: true },
-          },
-        },
-
-        actions: {
-          edit: { isAccessible: canModifyUsers },
-          delete: { isAccessible: canModifyUsers },
-          new: { isAccessible: canModifyUsers },
-          bulkDelete: { isAccessible: canModifyUsers },
-        },
+  //deceased
+  {
+  resource: Deceased,
+  options: {
+    navigation: adminNavigation,
+    properties: {
+      ownerId: {
+        isVisible: { edit: false, show: true, list: true, filter: true },
       },
     },
 
-    //Membership ID
-    {
-      resource: Membership_Id,
-      options: {
-        navigation: adminNavigation,
-        properties: {
-          ownerId: {
-            isVisible: { edit: false, show: true, list: true, filter: true },
-          },
-        },
-
-        actions: {
-          edit: { isAccessible: canModifyUsers },
-          delete: { isAccessible: canModifyUsers },
-          new: { isAccessible: canModifyUsers },
-          bulkDelete: { isAccessible: canModifyUsers },
-        },
-      },
+    actions: {
+      edit: { isAccessible: canModifyUsers },
+      delete: { isAccessible: canModifyUsers },
+      new: { isAccessible: canModifyUsers },
+      bulkDelete: { isAccessible: canModifyUsers },
     },
+  },
+},
+   
+
   
-    //GE Registry
+    //claimant
     {
-      resource: Child,
+      resource: DeathCause,
 
       options: {
         navigation: adminNavigation,
@@ -173,9 +179,11 @@ const adminBro = new AdminBro({
       },
     },
 
-    //GE
+
+  
+    //claimant
     {
-      resource: Mother,
+      resource: Claimant,
 
       options: {
         navigation: adminNavigation,
@@ -187,7 +195,6 @@ const adminBro = new AdminBro({
             isVisible: { edit: false, show: false, list: false, filter: true },
           },
         },
-
         actions: {
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
@@ -265,22 +272,17 @@ app.use(adminBro.options.rootPath, router);
 //
 // Running the server
 const run = async () => {
-    // await mongoose.connect(
-    //   "mongodb://" + process.env.DB_HOST_LOCAL + "/" + process.env.DB_LOCAL,
-    //   {
-    //     useNewUrlParser: true,
-    //   }
-    // );
+
 
     await mongoose.connect(
-      "mongodb://" +
+      "mongodb+srv://" +
         process.env.DB_USER +
         ":" +
         process.env.DB_PASS +
         "@" +
         process.env.DB_HOST +
         "/" +
-        process.env.DB_LOCAL,
+        process.env.DB_LOCAL+"?retryWrites=true&w=majority",
       {
         useNewUrlParser: true,
       }
