@@ -8,6 +8,21 @@ const ClaimSchema = mongoose.Schema({
   systemId: { type: String, required: false, unique: false },
   
   CIF: { type: String, required: false, unique: false },
+ date_of_loan: { type: Date, required: true, unique: true },
+  loan_balance: { type: Number, required: false, unique: false },
+  
+  funeral_benefit: { type: Number, required: false, unique: false },
+   total_claim: { type: String, required: true, unique: true },
+  date_full_claim_req_received: { type: Date, required: false, unique: false },
+  
+  date_of_notification: { type: Date, required: false, unique: false },
+   days_delay_notification: { type: Number, required: true, unique: true },
+  date_paid_declined: { type: Date, required: false, unique: false },
+  
+  claim_turnaround: { type: String, required: false, unique: false },
+   assement: { type: String, required: true, unique: true },
+  comments: { type: String, required: false, unique: false },
+  
 
 
   claimantId: {
