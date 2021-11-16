@@ -21,7 +21,7 @@ const DeceasedSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Branch',
           },
-  ownerId: {
+  owner_id: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
