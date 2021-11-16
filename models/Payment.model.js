@@ -8,7 +8,7 @@ const PaymentSchema = mongoose.Schema({
   last_name: { type: String, required: false, unique: false },
   origin: { type: String, required: false, unique: false },
 
-  owner_id: {
+  ownerId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
