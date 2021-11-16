@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const  User = require('./User.model')
 
 const DeathCauseSchema = mongoose.Schema({
-   description:{type:String,required:true,unique:true},
+   death_type:{type:String,required:true,unique:true},
+   description:{type:String,required:false,unique:true},
 
-  ownerId: {
+  owner_id: {
     type: mongoose.Types.ObjectId,
     ref: "User",
       },
