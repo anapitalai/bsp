@@ -7,14 +7,17 @@ const Branch = require('./Branch.model')
 const DeceasedSchema = mongoose.Schema({
   name: { type: String, required: true, unique: true },
   sex: { type: String, required: true, unique: true },
-  dob: { type: Date, required: true, unique: false },
-  dod: { type: Date, required: true, unique: false },
-  cod: { type: String, required: true, unique: false },
-  DeathCauseId: {
+  date_of_birth: { type: Date, required: true, unique: false },
+  date_of_death: { type: Date, required: true, unique: false },
+  date_of_loan: { type: String, required: true, unique: false },
+  
+  age_at_death: { type: Number, required: true, unique: false },
+ 
+  death_cause: {
     type: mongoose.Types.ObjectId,
     ref: 'DeathCause',
       },
-      BranchId: {
+      branch: {
         type: mongoose.Types.ObjectId,
         ref: 'Branch',
           },
