@@ -5,7 +5,7 @@ const ClaimantSchema = mongoose.Schema({
     name: {type:String,required:true,unique:true},
     relationship_to_deceased:{type:String,required:false,unique:true},
     sex: {type:String,required:false,unique:false},
-    description:{type:String,required:true,unique:true},
+    comments:{type:String,required:true,unique:true},
 
     owner_id: {
         type: mongoose.Types.ObjectId,
