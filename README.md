@@ -12,3 +12,5 @@ DB_LOCAL=psm00
 GOOGLE_API_KEY=00
 
 Run the app, do an "npm start bundle"
+
+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
