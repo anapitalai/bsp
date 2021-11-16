@@ -82,18 +82,46 @@ const adminBro = new AdminBro({
         actions: {
           edit: { isAccessible: canEditRecords },
           delete: { isAccessible: canEditRecords },
-          new: {
-            before: async (request, { currentAdmin }) => {
-              request.payload = {
-                ...request.payload,
-                ownerId: currentAdmin._id,
-              };
-              return request;
+            
+            //claim new aaction
+            new: {
+              isAccessible: ({ currentAdmin }) =>
+              currentAdmin && currentAdmin.role === "admin",
+              before: async (request) => {
+                if (request.method == "post") {
+                  const { eastings, northings, ...otherParams } = request.payload;
+                  if (eastings && northings) {
+                    const latlon = utm2ll.UTM2LL(eastings, northings, 55, false);
+                    const lat = latlon[0];
+                    const lon = latlon[1];
+                    return {
+                      ...request,
+                      payload: {
+                        ...otherParams,
+                        lat,
+                        lon,
+                      },
+                    };
+                  }
+                }
+  
+                return request;
+              },
             },
-          },
+//           new: {
+//             before: async (request, { currentAdmin }) => {
+//               request.payload = {
+//                 ...request.payload,
+//                 ownerId: currentAdmin._id,
+//               };
+//               return request;
+//             },
+//           },
+//         },
+//       },
+    
+        
         },
-      },
-    },
     //branch
     {
       resource: Branch,
