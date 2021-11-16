@@ -5,11 +5,17 @@ const  User = require('./User.model')
 const Deceased = require('./Deceased.model.js')
 
 const ClaimSchema = mongoose.Schema({
-  full_name: { type: String, required: true, unique: true },
+  claimant: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Claimant',
+      },
+      claim_id: { type: Number, required: false, unique: false },
+
   system_id: { type: String, required: false, unique: false },
   
   CIF: { type: String, required: false, unique: false },
  date_of_loan: { type: Date, required: false, unique: true },
+ date_of_death: { type: Date, required: false, unique: false },
   loan_balance: { type: Number, required: false, unique: false },
   
   funeral_benefit: { type: Number, required: false, unique: false },
@@ -17,28 +23,26 @@ const ClaimSchema = mongoose.Schema({
   date_full_claim_request_received: { type: Date, required: false, unique: false },
   
   date_of_notification: { type: Date, required: false, unique: false },
-   days_delay_notification: { type: Number, required: false, unique: true },
+   days_delay_notification: { type: Number, required: false, unique: false },
   date_paid_declined: { type: Date, required: false, unique: false },
   
   claim_turnaround: { type: String, required: false, unique: false },
-   assessment: { type: String, required: false, unique: true },
+  assessment: { type: String, required: false, unique: false },
   comments: { type: String, required: false, unique: false },
+  date_of_claim_payment: { type:Date, required: false, unique: false },
   
   deceased: {
     type: mongoose.Types.ObjectId,
     ref: 'Deceased',
       },
 
-  claimant: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Claimant',
-      },
+
    payment: {
      type: mongoose.Types.ObjectId,
      ref: 'Payment',
       },
 
-  owner_id: {
+  ownerId: {
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
@@ -60,7 +64,6 @@ ClaimSchema.pre('save', function(next) {
     this.updatedAt = currentDate;
     next();
     });
-    
-
+  
 
 module.exports = mongoose.model('Claim',ClaimSchema);

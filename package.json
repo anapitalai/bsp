@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.1",
-    "mongoose": "^5.11.4",
+    "mongoose": "^5.13.13",
     "tslib": "^2.3.1"
   }
 }

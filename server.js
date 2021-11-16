@@ -5,6 +5,7 @@ const AdminBro = require("admin-bro");
 const AdminBroExpressjs = require("@admin-bro/express");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User.model");
+const Days = require('./hooks/days')
 
 const Claim = require("./models/Claim.model");
 const Payment = require("./models/Payment.model");
@@ -89,17 +90,17 @@ const adminBro = new AdminBro({
               currentAdmin && currentAdmin.role === "admin",
               before: async (request) => {
                 if (request.method == "post") {
-                  const { eastings, northings, ...otherParams } = request.payload;
-                  if (eastings && northings) {
-                    const latlon = utm2ll.UTM2LL(eastings, northings, 55, false);
-                    const lat = latlon[0];
-                    const lon = latlon[1];
+                  const { date_of_death, date_of_notification,loan_balance,funeral_benefit, ...otherParams } = request.payload;
+                  if (date_of_death && date_of_notification) {
+                    const days_delay_notification = Days.number_of_days(date_of_death,date_of_notification)
+                    const total_claim = Days.total_claim(loan_balance,funeral_benefit)
+                    
                     return {
                       ...request,
                       payload: {
                         ...otherParams,
-                        lat,
-                        lon,
+                      days_delay_notification,
+                      total_claim
                       },
                     };
                   }
@@ -108,19 +109,20 @@ const adminBro = new AdminBro({
                 return request;
               },
             },
-//           new: {
-//             before: async (request, { currentAdmin }) => {
-//               request.payload = {
-//                 ...request.payload,
-//                 ownerId: currentAdmin._id,
-//               };
-//               return request;
-//             },
-//           },
-//         },
-//       },
-    
-        
+
+            //added by SLY
+          // new: {
+          //   before: async (request, { currentAdmin }) => {
+          //     request.payload = {
+          //       ...request.payload,
+          //       ownerId: currentAdmin._id,
+          //     };
+          //     return request;
+          //   },
+          // },            //end new
+        },
+      },
+     
         },
     //branch
     {
@@ -316,8 +318,8 @@ const run = async () => {
       }
     );
 
-  await app.listen(8082, () =>
-    console.log(`Example app listening on port 8082!`)
+  await app.listen(3000, () =>
+    console.log(`Example app listening on port 3000!`)
   );
 };
 
