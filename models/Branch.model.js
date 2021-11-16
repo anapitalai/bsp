@@ -1,20 +1,16 @@
 const mongoose = require('mongoose');
 
-const Membership_id = require('./Claimant.model')
 const  User = require('./User.model')
 
 
 const BranchSchema = mongoose.Schema({
   branch_name: { type: String, required: true, unique: true },
 
-  ownerId: {
+  owner_id: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
-  // membership_id: {
-  //   type: mongoose.Types.ObjectId,
-  //   ref: 'Membership_Id',
-  //     },
+
   createdAt: Date,
   updatedAt: Date ,
   
