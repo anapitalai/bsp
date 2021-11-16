@@ -2,39 +2,43 @@ const mongoose = require('mongoose');
 const Payment = require('./Payment.model')
 const Claimant = require('./Claimant.model')
 const  User = require('./User.model')
+const Deceased = require('./Deceased.model.js')
 
 const ClaimSchema = mongoose.Schema({
   full_name: { type: String, required: true, unique: true },
-  systemId: { type: String, required: false, unique: false },
+  system_id: { type: String, required: false, unique: false },
   
   CIF: { type: String, required: false, unique: false },
- date_of_loan: { type: Date, required: true, unique: true },
+ date_of_loan: { type: Date, required: false, unique: true },
   loan_balance: { type: Number, required: false, unique: false },
   
   funeral_benefit: { type: Number, required: false, unique: false },
-   total_claim: { type: String, required: true, unique: true },
-  date_full_claim_req_received: { type: Date, required: false, unique: false },
+   total_claim: { type: Number, required: false, unique: true },
+  date_full_claim_request_received: { type: Date, required: false, unique: false },
   
   date_of_notification: { type: Date, required: false, unique: false },
-   days_delay_notification: { type: Number, required: true, unique: true },
+   days_delay_notification: { type: Number, required: false, unique: true },
   date_paid_declined: { type: Date, required: false, unique: false },
   
   claim_turnaround: { type: String, required: false, unique: false },
-   assement: { type: String, required: true, unique: true },
+   assessment: { type: String, required: false, unique: true },
   comments: { type: String, required: false, unique: false },
   
+  deceased: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Deceased',
+      },
 
-
-  claimantId: {
+  claimant: {
     type: mongoose.Types.ObjectId,
     ref: 'Claimant',
       },
-      paymentId: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Payment',
-          },
+   payment: {
+     type: mongoose.Types.ObjectId,
+     ref: 'Payment',
+      },
 
-  ownerId: {
+  owner_id: {
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
