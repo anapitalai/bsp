@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const  User = require('./User.model')
 
 const ClaimantSchema = mongoose.Schema({
-    Name: {type:String,required:true,unique:true},
-    Sex: {type:String,required:false,unique:false},
-    DOB: {type:Date,required:true,unique:false},
+    name: {type:String,required:true,unique:true},
+    sex: {type:String,required:false,unique:false},
+    date_of_brith: {type:Date,required:true,unique:false},
 
-    Owner_Id: {
+    owner_id: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
           },
