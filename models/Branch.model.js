@@ -6,7 +6,7 @@ const  User = require('./User.model')
 const BranchSchema = mongoose.Schema({
   branch_name: { type: String, required: true, unique: true },
 
-  owner_id: {
+  ownerId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
