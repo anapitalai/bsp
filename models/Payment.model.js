@@ -4,14 +4,11 @@ const Claimant=require('./Claimant.model')
 
 const PaymentSchema = mongoose.Schema({
   first_name: { type: String, required: true, unique: true },
-  middle_name: { type: String, required: true, unique: false },
-  last_name: { type: String, required: true, unique: false },
-  origin: { type: String, required: true, unique: false },
-  membership_id: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Membership_Id',
-      },
-  ownerId: {
+  middle_name: { type: String, required: false, unique: false },
+  last_name: { type: String, required: false, unique: false },
+  origin: { type: String, required: false, unique: false },
+
+  owner_id: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
