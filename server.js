@@ -80,6 +80,7 @@ const adminBro = new AdminBro({
             isVisible: { edit: false, show: false, list: false, filter: true },
           },
           comments: { type: "richtext" },
+          assessment: { type: "richtext" },
 
           createdAt: {
             isVisible: { edit: false, show: false, list: false, filter: true },
@@ -144,7 +145,7 @@ const adminBro = new AdminBro({
           },
         },
 
-        actions: {  SystemId: { type: String, required: true, unique: false },
+        actions: {  System_id: { type: String, required: true, unique: false },
 
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
@@ -153,7 +154,7 @@ const adminBro = new AdminBro({
         },
       },
     },
-    //payment
+    //CIF
     {
       resource: CIF,
       options: {
@@ -172,28 +173,9 @@ const adminBro = new AdminBro({
         },
       },
     },
-        //payment
-        {
-          resource: SystemID,
-          options: {
-            navigation: adminNavigation,
-            properties: {
-              ownerId: {
-                isVisible: { edit: false, show: true, list: true, filter: true },
-              },
-            },
-    
-            actions: {
-              edit: { isAccessible: canModifyUsers },
-              delete: { isAccessible: canModifyUsers },
-              new: { isAccessible: canModifyUsers },
-              bulkDelete: { isAccessible: canModifyUsers },
-            },
-          },
-        },
-            //payment
+    //system
     {
-      resource: ClaimID,
+      resource: SystemID,
       options: {
         navigation: adminNavigation,
         properties: {
@@ -209,7 +191,31 @@ const adminBro = new AdminBro({
           bulkDelete: { isAccessible: canModifyUsers },
         },
       },
-    },
+    }, 
+    
+
+            //claimID
+
+
+            {
+              resource: ClaimID,
+              options: {
+                navigation: adminNavigation,
+                properties: {
+                  ownerId: {
+                    isVisible: { edit: false, show: true, list: true, filter: true },
+                  },
+                },
+        
+                actions: {
+                  edit: { isAccessible: canModifyUsers },
+                  delete: { isAccessible: canModifyUsers },
+                  new: { isAccessible: canModifyUsers },
+                  bulkDelete: { isAccessible: canModifyUsers },
+                },
+              },
+            },
+
   //deceased
   {
   resource: Deceased,
@@ -230,8 +236,6 @@ const adminBro = new AdminBro({
   },
 },
    
-
-  
     //claimant
     {
       resource: DeathCause,
@@ -279,7 +283,6 @@ const adminBro = new AdminBro({
         },
       },
     },
-
 
     
     //Users

@@ -5,34 +5,37 @@ const  User = require('./User.model')
 const Deceased = require('./Deceased.model.js')
 const SystemID=require("./SystemID.model")
 const ClaimID=require("./ClaimID.model")
+
 const ClaimSchema = mongoose.Schema({
   claimant: {
     type: mongoose.Types.ObjectId,
-    required:false,
     ref: 'Claimant',
+    required:true,
       },
-      claimID: {
+      CIF: {
         type: mongoose.Types.ObjectId,
+        ref: 'CIF',
         required:true,
-        ref: 'ClaimID',
-          },
-          SystemID: {
-            type: mongoose.Types.ObjectId,
+         },
+
+         claim_id: {
+          type: mongoose.Types.ObjectId,
+          ref: 'ClaimID',
+          required:true,
+           },
+           system_id: {
             required:true,
-            ref: SystemID,
-              },  
-          CIF: {
-                type: mongoose.Types.ObjectId,
-                required:false,
-                ref: 'CIF',
-                  },
+            type: mongoose.Types.ObjectId,
+            ref: 'SystemID',
+             },
+
  
  date_of_loan: { type: Date, required: false, unique: true },
  date_of_death: { type: Date, required: false, unique: false },
   loan_balance: { type: Number, required: false, unique: false },
   
   funeral_benefit: { type: Number, required: false, unique: false },
-   total_claim: { type: Number, required: false, unique: false },
+  total_claim: { type: Number, required: false, unique: false },
   date_full_claim_request_received: { type: Date, required: false, unique: false },
   
   date_of_notification: { type: Date, required: false, unique: false },
@@ -49,12 +52,7 @@ const ClaimSchema = mongoose.Schema({
   deceased: {
     type: mongoose.Types.ObjectId,
     ref: 'Deceased',
-      },
-
-
-   CIF: {
-     type: mongoose.Types.ObjectId,
-     ref: 'CIF',
+    required:true,
       },
 
   ownerId: {

@@ -15,12 +15,14 @@ const DeceasedSchema = mongoose.Schema({
   death_cause: {
     type: mongoose.Types.ObjectId,
     ref: 'DeathCause',
+    required:true,
       },
       branch: {
         type: mongoose.Types.ObjectId,
+        required:true,
         ref: 'Branch',
           },
-  owner_id: {
+  ownerId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
