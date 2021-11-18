@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const  User = require('./User.model')
 
 const ClaimantSchema = mongoose.Schema({
-    name: {type:String,required:true,unique:true},
-    relationship_to_deceased:{type:String,required:false,unique:true},
+    name: {type:String,required:true},
+    relationship_to_deceased:{type:String,required:false},
     sex: {type:String,required:false,unique:false},
-    comments:{type:String,required:true,unique:true},
+    comments:{type:String,required:false},
 
     owner_id: {
         type: mongoose.Types.ObjectId,

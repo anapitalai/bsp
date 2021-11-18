@@ -268,6 +268,7 @@ const adminBro = new AdminBro({
       options: {
         navigation: adminNavigation,
         properties: {
+          comments: { type: "richtext" },
           ownerId: {
             isVisible: { edit: false, show: true, list: true, filter: true },
           },

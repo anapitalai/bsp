@@ -30,7 +30,7 @@ const ClaimSchema = mongoose.Schema({
              },
 
  
- date_of_loan: { type: Date, required: false, unique: true },
+ date_of_loan: { type: Date, required: false},
  date_of_death: { type: Date, required: false, unique: false },
   loan_balance: { type: Number, required: false, unique: false },
   
