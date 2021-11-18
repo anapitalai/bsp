@@ -2,11 +2,9 @@ const mongoose = require('mongoose');
 const User = require('./User.model')
 const Claimant=require('./Claimant.model')
 
-const PaymentSchema = mongoose.Schema({
-  first_name: { type: String, required: true, unique: true },
-  middle_name: { type: String, required: false, unique: false },
-  last_name: { type: String, required: false, unique: false },
-  origin: { type: String, required: false, unique: false },
+const ClaimIDSchema = mongoose.Schema({
+  claim_id: { type: Number, required: true, unique: true },
+
 
   ownerId: {
     type: mongoose.Types.ObjectId,
@@ -16,7 +14,7 @@ const PaymentSchema = mongoose.Schema({
   updatedAt: Date
 });
 
-PaymentSchema.pre('save', function (next) {
+ClaimIDSchema.pre('save', function (next) {
   // get the current date
   var currentDate = new Date();
   // change the updated_at field to current date
@@ -30,4 +28,4 @@ PaymentSchema.pre('save', function (next) {
 
 
 
-module.exports = mongoose.model('Payment', PaymentSchema);
+module.exports = mongoose.model('ClaimID', ClaimIDSchema);

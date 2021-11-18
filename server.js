@@ -8,7 +8,9 @@ const User = require("./models/User.model");
 const Days = require('./hooks/days')
 
 const Claim = require("./models/Claim.model");
-const Payment = require("./models/Payment.model");
+const SystemID=require("./models/SystemID.model");
+const ClaimID=require("./models/ClaimID.model");
+const CIF = require("./models/CIF.model");
 const Claimant = require("./models/Claimant.model");
 const Deceased = require("./models/Deceased.model");
 
@@ -69,6 +71,12 @@ const adminBro = new AdminBro({
             isVisible: { edit: false, show: true, list: true, filter: true },
           },
           createdAt: {
+            isVisible: { edit: false, show: false, list: false, filter: true },
+          },
+          total_claim: {
+            isVisible: { edit: false, show: false, list: false, filter: true },
+          },
+          days_delay_notification: {
             isVisible: { edit: false, show: false, list: false, filter: true },
           },
           comments: { type: "richtext" },
@@ -136,7 +144,7 @@ const adminBro = new AdminBro({
           },
         },
 
-        actions: {  systemId: { type: String, required: true, unique: false },
+        actions: {  SystemId: { type: String, required: true, unique: false },
 
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
@@ -147,7 +155,45 @@ const adminBro = new AdminBro({
     },
     //payment
     {
-      resource: Payment,
+      resource: CIF,
+      options: {
+        navigation: adminNavigation,
+        properties: {
+          ownerId: {
+            isVisible: { edit: false, show: true, list: true, filter: true },
+          },
+        },
+
+        actions: {
+          edit: { isAccessible: canModifyUsers },
+          delete: { isAccessible: canModifyUsers },
+          new: { isAccessible: canModifyUsers },
+          bulkDelete: { isAccessible: canModifyUsers },
+        },
+      },
+    },
+        //payment
+        {
+          resource: SystemID,
+          options: {
+            navigation: adminNavigation,
+            properties: {
+              ownerId: {
+                isVisible: { edit: false, show: true, list: true, filter: true },
+              },
+            },
+    
+            actions: {
+              edit: { isAccessible: canModifyUsers },
+              delete: { isAccessible: canModifyUsers },
+              new: { isAccessible: canModifyUsers },
+              bulkDelete: { isAccessible: canModifyUsers },
+            },
+          },
+        },
+            //payment
+    {
+      resource: ClaimID,
       options: {
         navigation: adminNavigation,
         properties: {

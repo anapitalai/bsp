@@ -6,11 +6,10 @@ const Branch = require('./Branch.model')
 
 const DeceasedSchema = mongoose.Schema({
   name: { type: String, required: true, unique: false },
-  sex: { type: String, required: true, unique: false },
+  sex: { type: String, required: true,enum:['M','F'], unique: false },
   date_of_birth: { type: Date, required: false, unique: false },
   
-  date_of_loan: { type: Date, required: false, unique: false },
-  
+
   age_at_death: { type: Number, required: false, unique: false },
  
   death_cause: {
