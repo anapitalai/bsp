@@ -17,7 +17,7 @@ function total_claim(loan_bal, funeral_benefit) {
   const float1 = parseFloat(loan_bal);
   const float2 = parseFloat(funeral_benefit);
   const final = float1 + float2;
-  return final;
+  return final.toFixed(2);
 }
 
 module.exports = { number_of_days, total_claim};

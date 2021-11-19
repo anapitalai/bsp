@@ -89,7 +89,43 @@ const adminBro = new AdminBro({
           },
         },
         actions: {
-          edit: { isAccessible: canEditRecords },
+         // edit: { isAccessible: canEditRecords },
+         edit: {
+          isAccessible: ({ currentAdmin }) =>
+            currentAdmin && currentAdmin.role === "admin",
+          before: async (request) => {
+            if (request.method == "post") {
+              const {
+                date_of_death,
+                date_of_notification,
+                loan_balance,
+                funeral_benefit,
+                ...otherParams
+              } = request.payload;
+              if (date_of_death && date_of_notification) {
+                const days_delay_notification = Days.number_of_days(
+                  date_of_death,
+                  date_of_notification
+                );
+                const total_claim = Days.total_claim(
+                  loan_balance,
+                  funeral_benefit
+                );
+
+                return {
+                  ...request,
+                  payload: {
+                    ...otherParams,
+                    days_delay_notification,
+                    total_claim,
+                  },
+                };
+              }
+            }
+
+            return request;
+          },
+        },
           delete: { isAccessible: canEditRecords },
 
           //claim new aaction
@@ -129,17 +165,7 @@ const adminBro = new AdminBro({
               return request;
             },
           },
-
-          //added by SLY
-          // new: {
-          //   before: async (request, { currentAdmin }) => {
-          //     request.payload = {
-          //       ...request.payload,
-          //       ownerId: currentAdmin._id,
-          //     };
-          //     return request;
-          //   },
-          // },            //end new
+        
         },
       },
     },
@@ -241,7 +267,33 @@ const adminBro = new AdminBro({
         //action decease
 
         actions: {
-          edit: { isAccessible: canModifyUsers },
+          //edit: { isAccessible: canModifyUsers },
+          edit: {
+            isAccessible: ({ currentAdmin }) =>
+              currentAdmin && currentAdmin.role === "admin",
+            before: async (request) => {
+              if (request.method == "post") {
+                const {
+                  date_of_death,
+                  date_of_birth,
+                  ...otherParams
+                } = request.payload;
+                if (date_of_death && date_of_birth) {
+                  const age_at_death = Age.age(date_of_birth, date_of_death);
+  
+                  return {
+                    ...request,
+                    payload: {
+                      ...otherParams,
+                      age_at_death,
+                    },
+                  };
+                }
+              }
+  
+              return request;
+            },
+          },
           delete: { isAccessible: canModifyUsers },
           //new: { isAccessible: canModifyUsers },
           new: {
