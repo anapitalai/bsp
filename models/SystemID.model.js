@@ -6,10 +6,7 @@ const SystemIDSchema = mongoose.Schema({
   system_id: { type: Number, required: true, unique: true },
 
 
-  ownerId: {
-    type: mongoose.Types.ObjectId,
-    ref: 'User',
-  },
+
   createdAt: Date,
   updatedAt: Date
 });

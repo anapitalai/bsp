@@ -5,10 +5,7 @@ const DeathCauseSchema = mongoose.Schema({
    death_type:{type:String,required:true},
    description:{type:String,required:true},
 
-  ownerId: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
-      },
+  
     createdAt:Date,
     updatedAt:Date
 });

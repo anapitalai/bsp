@@ -5,11 +5,12 @@ const AdminBro = require("admin-bro");
 const AdminBroExpressjs = require("@admin-bro/express");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User.model");
-const Days = require('./hooks/days')
+const Days = require("./hooks/days");
+const Age = require("./hooks/age");
 
 const Claim = require("./models/Claim.model");
-const SystemID=require("./models/SystemID.model");
-const ClaimID=require("./models/ClaimID.model");
+const SystemID = require("./models/SystemID.model");
+const ClaimID = require("./models/ClaimID.model");
 const CIF = require("./models/CIF.model");
 const Claimant = require("./models/Claimant.model");
 const Deceased = require("./models/Deceased.model");
@@ -42,12 +43,10 @@ const canEditRecords = ({ currentAdmin, record }) => {
     (currentAdmin.role === "admin" ||
       currentAdmin._id === record.param("ownerId"))
   );
-
 };
 
 const canModifyUsers = ({ currentAdmin }) =>
   currentAdmin && currentAdmin.role === "admin";
-
 
 // Pass all configuration settings to AdminBro
 const adminBro = new AdminBro({
@@ -92,34 +91,46 @@ const adminBro = new AdminBro({
         actions: {
           edit: { isAccessible: canEditRecords },
           delete: { isAccessible: canEditRecords },
-            
-            //claim new aaction
-            new: {
-              isAccessible: ({ currentAdmin }) =>
-              currentAdmin && currentAdmin.role === "admin",
-              before: async (request) => {
-                if (request.method == "post") {
-                  const { date_of_death, date_of_notification,loan_balance,funeral_benefit, ...otherParams } = request.payload;
-                  if (date_of_death && date_of_notification) {
-                    const days_delay_notification = Days.number_of_days(date_of_death,date_of_notification)
-                    const total_claim = Days.total_claim(loan_balance,funeral_benefit)
-                    
-                    return {
-                      ...request,
-                      payload: {
-                        ...otherParams,
-                      days_delay_notification,
-                      total_claim
-                      },
-                    };
-                  }
-                }
-  
-                return request;
-              },
-            },
 
-            //added by SLY
+          //claim new aaction
+          new: {
+            isAccessible: ({ currentAdmin }) =>
+              currentAdmin && currentAdmin.role === "admin",
+            before: async (request) => {
+              if (request.method == "post") {
+                const {
+                  date_of_death,
+                  date_of_notification,
+                  loan_balance,
+                  funeral_benefit,
+                  ...otherParams
+                } = request.payload;
+                if (date_of_death && date_of_notification) {
+                  const days_delay_notification = Days.number_of_days(
+                    date_of_death,
+                    date_of_notification
+                  );
+                  const total_claim = Days.total_claim(
+                    loan_balance,
+                    funeral_benefit
+                  );
+
+                  return {
+                    ...request,
+                    payload: {
+                      ...otherParams,
+                      days_delay_notification,
+                      total_claim,
+                    },
+                  };
+                }
+              }
+
+              return request;
+            },
+          },
+
+          //added by SLY
           // new: {
           //   before: async (request, { currentAdmin }) => {
           //     request.payload = {
@@ -131,8 +142,7 @@ const adminBro = new AdminBro({
           // },            //end new
         },
       },
-     
-        },
+    },
     //branch
     {
       resource: Branch,
@@ -145,7 +155,8 @@ const adminBro = new AdminBro({
           },
         },
 
-        actions: {  System_id: { type: String, required: true, unique: false },
+        actions: {
+          System_id: { type: String, required: true, unique: false },
 
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
@@ -154,7 +165,7 @@ const adminBro = new AdminBro({
         },
       },
     },
-    //CIF
+    //CIF//
     {
       resource: CIF,
       options: {
@@ -191,51 +202,79 @@ const adminBro = new AdminBro({
           bulkDelete: { isAccessible: canModifyUsers },
         },
       },
-    }, 
-    
+    },
 
-            //claimID
+    //claimID
 
+    {
+      resource: ClaimID,
+      options: {
+        navigation: adminNavigation,
+        properties: {
+          ownerId: {
+            isVisible: { edit: false, show: true, list: true, filter: true },
+          },
+        },
 
-            {
-              resource: ClaimID,
-              options: {
-                navigation: adminNavigation,
-                properties: {
-                  ownerId: {
-                    isVisible: { edit: false, show: true, list: true, filter: true },
-                  },
-                },
-        
-                actions: {
-                  edit: { isAccessible: canModifyUsers },
-                  delete: { isAccessible: canModifyUsers },
-                  new: { isAccessible: canModifyUsers },
-                  bulkDelete: { isAccessible: canModifyUsers },
-                },
-              },
-            },
-
-  //deceased
-  {
-  resource: Deceased,
-  options: {
-    navigation: adminNavigation,
-    properties: {
-      ownerId: {
-        isVisible: { edit: false, show: true, list: true, filter: true },
+        actions: {
+          edit: { isAccessible: canModifyUsers },
+          delete: { isAccessible: canModifyUsers },
+          new: { isAccessible: canModifyUsers },
+          bulkDelete: { isAccessible: canModifyUsers },
+        },
       },
     },
 
-    actions: {
-      edit: { isAccessible: canModifyUsers },
-      delete: { isAccessible: canModifyUsers },
-      new: { isAccessible: canModifyUsers },
-      bulkDelete: { isAccessible: canModifyUsers },
+    //deceased
+    {
+      resource: Deceased,
+      options: {
+        navigation: adminNavigation,
+        properties: {
+          ownerId: {
+            isVisible: { edit: false, show: true, list: true, filter: true },
+          },
+          age_at_death: {
+            isVisible: { edit: false, show: false, list: true, filter: true },
+          },
+        },
+        //action decease
+
+        actions: {
+          edit: { isAccessible: canModifyUsers },
+          delete: { isAccessible: canModifyUsers },
+          //new: { isAccessible: canModifyUsers },
+          new: {
+            isAccessible: ({ currentAdmin }) =>
+              currentAdmin && currentAdmin.role === "admin",
+            before: async (request) => {
+              if (request.method == "post") {
+                const {
+                  date_of_death,
+                  date_of_birth,
+                  ...otherParams
+                } = request.payload;
+                if (date_of_death && date_of_birth) {
+                  const age_at_death = Age.age(date_of_birth, date_of_death);
+  
+                  return {
+                    ...request,
+                    payload: {
+                      ...otherParams,
+                      age_at_death,
+                    },
+                  };
+                }
+              }
+  
+              return request;
+            },
+          },
+          bulkDelete: { isAccessible: canModifyUsers },
+        },
+      },
     },
-  },
-},
-   
+
     //claimant
     {
       resource: DeathCause,
@@ -253,14 +292,13 @@ const adminBro = new AdminBro({
         actions: {
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
-          new: { isAccessible: canModifyUsers },
+         new: { isAccessible: canModifyUsers },
+
           bulkDelete: { isAccessible: canModifyUsers },
         },
       },
     },
 
-
-  
     //claimant
     {
       resource: Claimant,
@@ -285,7 +323,6 @@ const adminBro = new AdminBro({
       },
     },
 
-    
     //Users
     {
       resource: User,
@@ -305,7 +342,8 @@ const adminBro = new AdminBro({
           },
         },
         actions: {
-          new: {isAccessible:canModifyUsers,
+          new: {
+            isAccessible: canModifyUsers,
             before: async (request) => {
               if (request.payload.password) {
                 request.payload = {
@@ -318,7 +356,7 @@ const adminBro = new AdminBro({
                 };
               }
               return request;
-            }
+            },
           },
           edit: { isAccessible: canModifyUsers },
           delete: { isAccessible: canModifyUsers },
@@ -346,27 +384,24 @@ const router = AdminBroExpressjs.buildAuthenticatedRouter(adminBro, {
   cookiePassword: "some-secret-password-used-to-secure-cookie",
 });
 
-
-
 app.use(adminBro.options.rootPath, router);
 //
 // Running the server
 const run = async () => {
-
-
-    await mongoose.connect(
-      "mongodb+srv://" +
-        process.env.DB_USER +
-        ":" +
-        process.env.DB_PASS +
-        "@" +
-        process.env.DB_HOST +
-        "/" +
-        process.env.DB_LOCAL+"?retryWrites=true&w=majority",
-      {
-        useNewUrlParser: true,
-      }
-    );
+  await mongoose.connect(
+    "mongodb+srv://" +
+      process.env.DB_USER +
+      ":" +
+      process.env.DB_PASS +
+      "@" +
+      process.env.DB_HOST +
+      "/" +
+      process.env.DB_LOCAL +
+      "?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+    }
+  );
 
   await app.listen(3000, () =>
     console.log(`Example app listening on port 3000!`)

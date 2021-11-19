@@ -6,10 +6,6 @@ const CIFSchema = mongoose.Schema({
   cif_number: { type: Number, required: true, unique: true },
 
 
-  ownerId: {
-    type: mongoose.Types.ObjectId,
-    ref: 'User',
-  },
   createdAt: Date,
   updatedAt: Date
 });
