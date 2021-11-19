@@ -74,10 +74,10 @@ const adminBro = new AdminBro({
             isVisible: { edit: false, show: false, list: false, filter: true },
           },
           total_claim: {
-            isVisible: { edit: false, show: false, list: false, filter: true },
+            isVisible: { edit: false, show: true, list: true, filter: true },
           },
           days_delay_notification: {
-            isVisible: { edit: false, show: false, list: false, filter: true },
+            isVisible: { edit: false, show: true, list: true, filter: true },
           },
           comments: { type: "richtext" },
           assessment: { type: "richtext" },

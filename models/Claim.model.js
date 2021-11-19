@@ -16,15 +16,18 @@ const ClaimSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'CIF',
         required:true,
+        unique:true,
          },
 
          claim_id: {
           type: mongoose.Types.ObjectId,
           ref: 'ClaimID',
           required:true,
+          unique:true,
            },
            system_id: {
             required:true,
+            unique:true,
             type: mongoose.Types.ObjectId,
             ref: 'SystemID',
              },
@@ -52,7 +55,7 @@ const ClaimSchema = mongoose.Schema({
   deceased: {
     type: mongoose.Types.ObjectId,
     ref: 'Deceased',
-    required:true,
+    required:true
       },
 
   ownerId: {

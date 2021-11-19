@@ -4,7 +4,7 @@ const  User = require('./User.model')
 const ClaimantSchema = mongoose.Schema({
     name: {type:String,required:true},
     relationship_to_deceased:{type:String,required:false},
-    sex: {type:String,required:false,unique:false},
+    sex: {type:String,required:false,unique:false,enum:['M','F']},
     comments:{type:String,required:false},
 
     owner_id: {
